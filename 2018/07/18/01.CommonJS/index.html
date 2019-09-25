@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Node.js_01 | Thomas's blog</title><link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/feelinggeeky.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico"><link rel="apple-touch-icon" href="/feelinggeeky.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/feelinggeeky.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Node.js_01</h1><a id="logo" href="/feelinggeeky.github.io/.">Thomas's blog</a><p class="description">您吃了吗？</p></div><div id="nav-menu"><a class="current" href="/feelinggeeky.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/feelinggeeky.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/feelinggeeky.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/feelinggeeky.github.io/history/"><i class="fa fa-list-ol"> 历史</i></a><a href="/feelinggeeky.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Node.js_01</h1><div class="post-meta">Jul 18, 2018<span> | </span><span class="category"><a href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CommonJS"><span class="toc-number">1.</span> <span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#引入模块"><span class="toc-number">2.</span> <span class="toc-text">引入模块</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化"><span class="toc-number">3.</span> <span class="toc-text">模块化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#全局对象global"><span class="toc-number">4.</span> <span class="toc-text">全局对象global</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#exports和module-exports"><span class="toc-number">5.</span> <span class="toc-text">exports和module.exports</span></a></li></ol></div></div><div class="post-content"><h1 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h1><ul>
+<li>模块引用<br>  require</li>
+<li>模块定义<br>  一个js文件就是一个模块，定义模块就是创建一个js文件</li>
+<li>模块标识<ul>
+<li>模块的标识就是<strong>模块的名字或者路径</strong></li>
+<li>对于核心模块（npm下载的模块），直接使用<strong>模块的名字</strong>对其进行引入</li>
+<li>自定义，使用<strong>文件的路径</strong>来进行引入</li>
+</ul>
+</li>
+</ul>
+<h1 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h1><p>在node中，通过require()函数来引入外部的模块</p>
+<ul>
+<li><strong>require()</strong> 可以传递一个文件的路径作为参数，node将会自动根据该路径来引入外部模块</li>
+<li>若使用相对路径，必须以 . 或者 ..开头</li>
+<li>使用require()引入模块以后，该函数会返回一个<strong>对象</strong>，这个对象代表的就是<strong>引入的模块</strong></li>
+</ul>
+<p>在使用require()引入外部模块时，使用的就是模块标识，可通过模块标识来找到指定模块</p>
+<p><strong>模块分成两大类</strong></p>
+<ul>
+<li><strong>核心模块</strong><br>  -由node引擎提供的模块<br>  -核心模块的标识就是<strong>模块的名字</strong></li>
+<li><strong>文件模块</strong><br>  -由用户自己创建的模块<br>  -文件模块的标识就是 <strong>文件的路径（绝对、相对路径）</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var md = require(&quot;./moudle&quot;);</span><br><span class="line">    md就是引入的模块 返回值</span><br><span class="line">var math = require(&quot;./math&quot;);</span><br><span class="line">    路径就是</span><br><span class="line">console.log(md);</span><br></pre></td></tr></table></figure>
+
+<h1 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h1><ol>
+<li>在Node中，一个js文件就是一个模块</li>
+<li>每一个js文件中的js代码都是<strong>独立运行在一个函数中</strong> 而<strong>不是</strong> 在<strong>全局作用域</strong></li>
+</ol>
+<p>所以一个模块中的变量和函数在其它模块中<strong>无法访问</strong></p>
+<pre><code>解决方法：
+    exports 向外暴露变量和方法
+    只需要将暴露给外部的变量或方法设置为exports的属性即可</code></pre><h1 id="全局对象global"><a href="#全局对象global" class="headerlink" title="全局对象global"></a>全局对象global</h1><p><strong>在node中有一个全局对象global，它的作用和网页中的window类似</strong></p>
+<p>在全局中创建的<strong>变量</strong>都会作为global的<strong>属性</strong>保存<br>在全剧中创建的<strong>函数</strong>都会作为global的<strong>方法</strong>保存</p>
+<p>当在node在执行模块中的代码时，它会首先在代码的最顶部，添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function (exports, require, module, __filename, __dirname) &#123;</span><br><span class="line">    var a = 10 ;</span><br><span class="line">    //不是全局变量</span><br><span class="line">    //console.log(global.a);</span><br><span class="line">    /*</span><br><span class="line">         argumenets.callee</span><br><span class="line">            -这个属性保存的是当前执行的函数对象</span><br><span class="line">    */          </span><br><span class="line">    console.log(arguments.callee+&quot;&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="exports和module-exports"><a href="#exports和module-exports" class="headerlink" title="exports和module.exports"></a>exports和module.exports</h1><p>实际上模块中的代码都是包装在一个函数中执行的，并且在函数执行时，同时传递了<strong>五个实参</strong></p>
+<ol>
+<li><p>exports<br>该对象用来将变量或函数暴露在外部</p>
+</li>
+<li><p>require<br>函数，用来引入外部的模块</p>
+</li>
+<li><p>module<br>module代表的是当前模块本身,exports就是module的属性<br>既可以使用exports导出，也可以使用module.exports导出</p>
+<ul>
+<li><p>exports 和 module.exports</p>
+<ul>
+<li><p>通过exports只能使用 .的方式来向外暴露内部变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exports.xxx = xxx;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>而module.exports既可以通过.的形式，也可以直接赋值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">module.exports.xxx = xxx;</span><br><span class="line">module.exports = &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="4">
+<li><p>__filename<br>当前模块的完整路径，如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\NodeJS\01.md</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>__dirname<br>当前模块所在文件夹的完整路径,如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\NodeJS</span><br></pre></td></tr></table></figure></li>
+</ol>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/">CSS预处理器-Less</a><a class="next" href="/feelinggeeky.github.io/2018/07/06/flex/">flex</a></div></div></div></div><div class="pure-u-1 pure-u-md-1-4"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://github.com/feelinggeeky/feelinggeeky.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/CSS/">CSS</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Hexo/">Hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/SSM/">SSM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Windows/">Windows</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/feelinggeeky.github.io/tags/Exceptions/" style="font-size: 15px;">Exceptions</a> <a href="/feelinggeeky.github.io/tags/CSS预处理器/" style="font-size: 15px;">CSS预处理器</a> <a href="/feelinggeeky.github.io/tags/flex/" style="font-size: 15px;">flex</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/23/04.fs/">Node.js_04</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/22/03.buffer/">Node.js_03</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/21/02.npm/">Node.js_02</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/">CSS预处理器-Less</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/18/01.CommonJS/">Node.js_01</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/06/flex/">flex</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/06/20/essay4/">CMS遇见java.lang.NullPointerException</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/05/01/essay3/">微软小娜无法搜索本地文件问题</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/04/26/Python_OOP/">Python_OOP</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/04/07/hello-world/">初建Hexo</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://www.fzq1997.top" title="Franklin" target="_blank">Franklin</a><ul></ul><a href="https://blog.xyx98.top" title="奚宇星" target="_blank">奚宇星</a><ul></ul><a href="https://www.delaunay.cn/" title="张欢" target="_blank">张欢</a><ul></ul><a href="https://ouyuo.github.io" title="孙卓" target="_blank">孙卓</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/feelinggeeky.github.io/." rel="nofollow">Thomas's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/feelinggeeky.github.io/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/feelinggeeky.github.io/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/feelinggeeky.github.io/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/feelinggeeky.github.io/js/smartresize.js?v=0.0.0"></script></div></body></html>
