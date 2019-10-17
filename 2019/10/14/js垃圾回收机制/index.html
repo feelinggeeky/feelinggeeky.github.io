@@ -1,4 +1,113 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>JS垃圾回收机制 | Thomas's blog</title><link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/feelinggeeky.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico"><link rel="apple-touch-icon" href="/feelinggeeky.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/feelinggeeky.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">JS垃圾回收机制</h1><a id="logo" href="/feelinggeeky.github.io/.">Thomas's blog</a><p class="description">您吃了吗？</p></div><div id="nav-menu"><a class="current" href="/feelinggeeky.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/feelinggeeky.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/feelinggeeky.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/feelinggeeky.github.io/history/"><i class="fa fa-list-ol"> 历史</i></a><a href="/feelinggeeky.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">JS垃圾回收机制</h1><div class="post-meta">Oct 14, 2019<span> | </span><span class="category"><a href="/feelinggeeky.github.io/categories/Charles/">Charles</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div></div></div><div class="post-content"><p><a href="http://www.jiemhk.org/index.php" target="_blank" rel="noopener">http://www.jiemhk.org/index.php</a></p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>JS垃圾回收机制 | Thomas's blog</title><link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/feelinggeeky.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico"><link rel="apple-touch-icon" href="/feelinggeeky.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/feelinggeeky.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">JS垃圾回收机制</h1><a id="logo" href="/feelinggeeky.github.io/.">Thomas's blog</a><p class="description">您吃了吗？</p></div><div id="nav-menu"><a class="current" href="/feelinggeeky.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/feelinggeeky.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/feelinggeeky.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/feelinggeeky.github.io/history/"><i class="fa fa-list-ol"> 历史</i></a><a href="/feelinggeeky.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">JS垃圾回收机制</h1><div class="post-meta">Oct 14, 2019<span> | </span><span class="category"><a href="/feelinggeeky.github.io/categories/Charles/">Charles</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要垃圾回收（Why）？"><span class="toc-number">1.</span> <span class="toc-text">为什么要垃圾回收（Why）？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript垃圾回收机制原理（What-？"><span class="toc-number">2.</span> <span class="toc-text">JavaScript垃圾回收机制原理（What)？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS中垃圾回收方式-两种"><span class="toc-number">3.</span> <span class="toc-text">JS中垃圾回收方式(两种)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记清除"><span class="toc-number">3.1.</span> <span class="toc-text">标记清除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用计数-方式"><span class="toc-number">4.</span> <span class="toc-text">引用计数 方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么情况会引起内存泄漏？"><span class="toc-number">5.</span> <span class="toc-text">什么情况会引起内存泄漏？</span></a></li></ol></div></div><div class="post-content"><h2 id="为什么要垃圾回收（Why）？"><a href="#为什么要垃圾回收（Why）？" class="headerlink" title="为什么要垃圾回收（Why）？"></a>为什么要垃圾回收（Why）？</h2><blockquote>
+<p>  由于字符串、对象和数组没有固定大小，所有当他们的大小已知时，才能对他们进行动态的存储分配。JavaScript程序每次创建字符串、数组或对象时，解释器都必须分配内存来存储那个实体。只要像这样动态地分配了内存，最终都要释放这些内存以便他们能够被再用，否则，JavaScript的解释器将会消耗完系统中所有可用的内存，造成系统崩溃。</p>
+</blockquote>
+<h2 id="JavaScript垃圾回收机制原理（What-？"><a href="#JavaScript垃圾回收机制原理（What-？" class="headerlink" title="JavaScript垃圾回收机制原理（What)？"></a>JavaScript垃圾回收机制原理（What)？</h2><p>JavaScript垃圾回收的机制很简单：</p>
+<blockquote>
+<p>1.找出不再使用的变量<br>2.然后释放掉其占用的内存</p>
+</blockquote>
+<p>但是这个过程不是时时的，因为其开销比较大，所以垃圾回收器会按照<strong>固定的时间间隔</strong> 周期性地执行。</p>
+<h2 id="JS中垃圾回收方式-两种"><a href="#JS中垃圾回收方式-两种" class="headerlink" title="JS中垃圾回收方式(两种)"></a>JS中垃圾回收方式(两种)</h2><h3 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h3><ol>
+<li><strong>工作原理：</strong><blockquote>
+<p>当变量进入环境时，将这个变量标记为“进入环境”。当变量离开环境时，则将其标记为“离开环境”。标记“离开环境”的就回收内存。</p>
+</blockquote>
+</li>
+</ol>
+<p>例如，<strong>在函数中声明一个变量</strong>，就将这个变量标记为“进入环境”。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> a=<span class="number">10</span>;<span class="comment">//被标记，进入环境</span></span><br><span class="line">  <span class="keyword">var</span> b=<span class="number">20</span>;<span class="comment">//被标记，进入环境</span></span><br><span class="line">&#125;</span><br><span class="line">test();<span class="comment">//执行完毕之后a、b又被标记离开环境，被回收</span></span><br></pre></td></tr></table></figure>
+
+<p>从逻辑上讲，永远<strong>不能释放</strong>进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用到它们。</p>
+<ol start="2">
+<li><p><strong>工作流程：</strong></p>
+<p> ①.<strong>添加标记:</strong>  首先，垃圾回收器在运行的时候会给存储在内存中的所有变量都加上标记</p>
+<p> ②.<strong>去除标记:</strong> 然后，去掉环境中的<strong>变量</strong>以及被环境中的<strong>变量引用的变量</strong>的标记</p>
+<p> ③.<strong>准备删除:</strong> 之后再被加上标记的变量会被视为准备删除的变量</p>
+<p> ④.<strong>内存清除:</strong> 垃圾回收器完成内存清除工作，销毁那些带标记的值并回收他们所占用的内存空间</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj = &#123;<span class="attr">name</span>:<span class="string">'thomas'</span>, <span class="attr">age</span>: <span class="number">20</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> obj = &#123;<span class="attr">name</span>:<span class="string">'thomas'</span>, <span class="attr">age</span>: <span class="number">20</span>&#125;;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = fn1();</span><br><span class="line"><span class="keyword">var</span> b = fn2();</span><br></pre></td></tr></table></figure>
+
+<p>我们来看代码是如何执行的。<br>首先定义了两个function，分别叫做fn1和fn2，当fn1被调用时:进入fn1的环境，会开辟一块内存存放对象{name: ‘thomas’, age: 20}</p>
+<p>而当调用结束后:就出了fn1的环境，那么该块内存会被js引擎中的垃圾回收器自动释放</p>
+<p>在fn2被调用的过程中，返回的对象被全局变量b所指向，所以该块内存并不会被释放。</p>
+<h2 id="引用计数-方式"><a href="#引用计数-方式" class="headerlink" title="引用计数 方式"></a>引用计数 方式</h2><ol>
+<li><p><strong>工作原理：</strong></p>
+<blockquote>
+<p>跟踪记录每个值被引用的次数。</p>
+</blockquote>
+</li>
+<li><p><strong>工作流程：</strong></p>
+</li>
+</ol>
+<p>①.声明了一个变量并将一个引用类型的值赋值给这个变量，这个引用类型值的引用次数就是1</p>
+<p>②.同一个值又被赋值给另一个变量，这个引用类型值的引用次数加1</p>
+<p>③.当包含这个引用类型值的变量又被赋值成另一个值了，那么这个引用类型值的引用次数减1</p>
+<p>④.当引用次数变成0时，说明没办法访问这个值了</p>
+<p>⑤.当垃圾收集器下一次运行时，它就会释放引用次数是0的值所占的内存</p>
+<ol start="3">
+<li><strong>关于IE的引用计数问题：</strong></li>
+</ol>
+<p>IE中有一部分对象并不是原生js对象。例如，其内存泄露DOM和BOM中的对象就是使用C++以COM对象的形式实现的，而COM对象的垃圾回收机制采用的就是引用计数策略。因此，即使IE的js引擎采用标记清除策略来实现，但js访问的COM对象依然是基于引用计数策略的。换句话说，只要在IE中涉及COM对象，就会存在循环引用的问题。</p>
+<p>循环引用的时候就会释放不掉内存。循环引用就是对象A中包含另一个指向对象B的指针，B中也包含一个指向A的引用。如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> obj1 = &#123;&#125;;</span><br><span class="line">    <span class="keyword">let</span> obj2 = &#123;&#125;;</span><br><span class="line">    obj1.a = obj2; <span class="comment">// obj1 引用 obj2</span></span><br><span class="line">    obj2.a = obj1; <span class="comment">// obj2 引用 obj1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>解决:</strong> 手工断开js对象和DOM之间的链接。赋值为null:</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj1 = <span class="literal">null</span>;</span><br><span class="line">obj2 = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
+
+<p>IE9把DOM和BOM转换成真正的JS对象了，所以避免了这个问题。</p>
+<h2 id="什么情况会引起内存泄漏？"><a href="#什么情况会引起内存泄漏？" class="headerlink" title="什么情况会引起内存泄漏？"></a>什么情况会引起内存泄漏？</h2><p>虽然有垃圾回收机制,但是我们编写代码操作不当还是会造成内存泄漏。</p>
+<blockquote>
+<ol>
+<li>意外的全局变量引起的内存泄漏。</li>
+</ol>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">create</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  sum=<span class="string">"xxx"</span>;<span class="comment">//sum成为一个全局变量，不会被回收</span></span><br></pre></td></tr></table></figure>
+
+<p>sum没被声明,会变成一个全局变量,在页面关闭之前不会被释放。</p>
+<p>另一种意外的全局变量可能由 this 创建:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.variable = <span class="string">"potential accidental global"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// foo 调用自己，this 指向了全局对象（window）</span></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+
+<p>解决：使用严格模式避免。在 JavaScript 文件头部加上 ‘use strict’，可以避免此类错误发生。启用严格模式解析 JavaScript ，避免意外的全局变量。</p>
+<blockquote>
+<ol start="2">
+<li>闭包引起的内存泄漏</li>
+</ol>
+</blockquote>
+<p>原因：闭包可以维持函数内局部变量，使其得不到释放。</p>
+<p>解决：将事件处理函数定义在外部，解除闭包,或者在定义事件处理函数的外部函数中，删除对dom的引用。</p>
+<blockquote>
+<ol start="3">
+<li>没有清理的DOM元素引用</li>
+</ol>
+</blockquote>
+<p>原因：虽然别的地方删除了，但是对象中还存在对dom的引用</p>
+<p>解决：手动删除。</p>
+<blockquote>
+<ol start="4">
+<li>被遗忘的定时器或者回调</li>
+</ol>
+</blockquote>
+<p>原因：定时器中有dom的引用，即使dom删除了，但是定时器还在，所以内存中还是有这个dom。</p>
+<p>解决：手动删除定时器和dom。</p>
+<blockquote>
+<ol start="5">
+<li>子元素存在引用引起的内存泄漏</li>
+</ol>
+</blockquote>
+<p>原因：div中的ul li  得到这个div，会间接引用某个得到的li，那么此时因为div间接引用li，即使li被清空，也还是在内存中，并且只要li不被删除，他的父元素都不会被删除。</p>
+<p>解决：手动删除清空。</p>
+<p>什么放在内存中？什么不放在内存中？<br>基本类型是：Undefined/Null/Boolean/Number/String</p>
+<p>基本类型的值存在内存中，被保存在栈内存中。从一个变量向另一个变量复制基本类型的值，会创建这个值的一个副本。</p>
+<p>引用类型：object</p>
+<p>引用类型的值是对象，保存在堆内存中。</p>
+<ol>
+<li><p>包含引用类型值的变量实际上包含的并不是对象本身，而是一个指向该对象的指针。从一个变量向另一个变量复制引用类型的值，复制的其实是指针，因此两个变量最终都指向同一个对象。</p>
+</li>
+<li><p>js不允许直接访问内存中的位置，也就是不能直接访问操作对象的内存空间。在操作对象时，实际上是在操作对象的引用而不是实际的对象。</p>
+</li>
+</ol>
+<p>栈和堆的区别<br>　　一、堆栈空间分配区别：<br>　　1、栈（操作系统）：由操作系统自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈；<br>　　2、堆（操作系统）： 一般由程序员分配释放，若程序员不释放，程序结束时可能由OS回收，分配方式倒是类似于链表。<br>　　二、堆栈缓存方式区别：<br>　　1、栈使用的是一级缓存， 他们通常都是被调用时处于存储空间中，调用完毕立即释放；<br>　　2、堆是存放在二级缓存中，生命周期由虚拟机的垃圾回收算法来决定（并不是一旦成为孤儿对象就能被回收）。所以调用这些对象的速度要相对来得低一些。<br>　　三、堆栈数据结构区别：<br>　　堆（数据结构）：堆可以被看成是一棵树，如：堆排序；<br>　　栈（数据结构）：一种先进后出的数据结构。</p>
 </div><div class="tags"></div><div class="post-nav"><a class="next" href="/feelinggeeky.github.io/2019/10/13/Charles01/">Charles实现本地数据mock，404</a></div></div></div></div><div class="pure-u-1 pure-u-md-1-4"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://github.com/feelinggeeky/feelinggeeky.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/CSS/">CSS</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Charles/">Charles</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Hexo/">Hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/SSM/">SSM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Windows/">Windows</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/feelinggeeky.github.io/tags/Exceptions/" style="font-size: 15px;">Exceptions</a> <a href="/feelinggeeky.github.io/tags/CSS预处理器/" style="font-size: 15px;">CSS预处理器</a> <a href="/feelinggeeky.github.io/tags/flex/" style="font-size: 15px;">flex</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">JS垃圾回收机制</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/10/13/Charles01/">Charles实现本地数据mock，404</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/09/30/面试/">面试</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/23/04.fs/">Node.js_04</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/22/03.buffer/">Node.js_03</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/21/02.npm/">Node.js_02</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/">CSS预处理器-Less</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/18/01.CommonJS/">Node.js_01</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/06/flex/">flex</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/06/20/essay4/">CMS遇见java.lang.NullPointerException</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://www.fzq1997.top" title="Franklin" target="_blank">Franklin</a><ul></ul><a href="https://blog.xyx98.top" title="奚宇星" target="_blank">奚宇星</a><ul></ul><a href="https://www.delaunay.cn/" title="张欢" target="_blank">张欢</a><ul></ul><a href="https://ouyuo.github.io" title="孙卓" target="_blank">孙卓</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/feelinggeeky.github.io/." rel="nofollow">Thomas's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/feelinggeeky.github.io/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/feelinggeeky.github.io/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
   });
