@@ -1,4 +1,129 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>JS垃圾回收机制 | Thomas's blog</title><link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/feelinggeeky.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico"><link rel="apple-touch-icon" href="/feelinggeeky.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/feelinggeeky.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">JS垃圾回收机制</h1><a id="logo" href="/feelinggeeky.github.io/.">Thomas's blog</a><p class="description">您吃了吗？</p></div><div id="nav-menu"><a class="current" href="/feelinggeeky.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/feelinggeeky.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/feelinggeeky.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/feelinggeeky.github.io/history/"><i class="fa fa-list-ol"> 历史</i></a><a href="/feelinggeeky.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">JS垃圾回收机制</h1><div class="post-meta">Oct 14, 2019<span> | </span><span class="category"><a href="/feelinggeeky.github.io/categories/Javascript/">Javascript</a></span><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="clear"><div class="toc-article" id="toc"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要垃圾回收（Why）？"><span class="toc-number">1.</span> <span class="toc-text">为什么要垃圾回收（Why）？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript垃圾回收机制原理（What-？"><span class="toc-number">2.</span> <span class="toc-text">JavaScript垃圾回收机制原理（What)？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS中垃圾回收方式-两种"><span class="toc-number">3.</span> <span class="toc-text">JS中垃圾回收方式(两种)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记清除"><span class="toc-number">3.1.</span> <span class="toc-text">标记清除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用计数-方式"><span class="toc-number">3.2.</span> <span class="toc-text">引用计数 方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么情况会引起内存泄漏？"><span class="toc-number">4.</span> <span class="toc-text">什么情况会引起内存泄漏？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#意外的全局变量引起的内存泄漏。"><span class="toc-number">4.1.</span> <span class="toc-text">意外的全局变量引起的内存泄漏。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#闭包引起的内存泄漏"><span class="toc-number">4.2.</span> <span class="toc-text">闭包引起的内存泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#没有清理的DOM元素引用"><span class="toc-number">4.3.</span> <span class="toc-text">没有清理的DOM元素引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#被遗忘的定时器或者回调"><span class="toc-number">4.4.</span> <span class="toc-text">被遗忘的定时器或者回调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#子元素存在引用引起的内存泄漏"><span class="toc-number">4.5.</span> <span class="toc-text">子元素存在引用引起的内存泄漏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么放在内存中？什么不放在内存中？"><span class="toc-number">5.</span> <span class="toc-text">什么放在内存中？什么不放在内存中？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#栈和堆的区别"><span class="toc-number">6.</span> <span class="toc-text">栈和堆的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、堆栈空间分配区别："><span class="toc-number">6.1.</span> <span class="toc-text">一、堆栈空间分配区别：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、堆栈缓存方式区别："><span class="toc-number">6.2.</span> <span class="toc-text">二、堆栈缓存方式区别：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、堆栈数据结构区别："><span class="toc-number">6.3.</span> <span class="toc-text">三、堆栈数据结构区别：</span></a></li></ol></li></ol></div></div><div class="post-content"><h2 id="为什么要垃圾回收（Why）？"><a href="#为什么要垃圾回收（Why）？" class="headerlink" title="为什么要垃圾回收（Why）？"></a>为什么要垃圾回收（Why）？</h2><blockquote>
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Javascript具有自动垃圾回收机制(GC:Garbage Collecation)，也就是说，执行环境会负责管理代码执行过程中使用的内存。"><link rel="alternate" href="/feelinggeeky.github.io/default" title="Thomas's blog"><link rel="shortcut icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico?v=2.11.0">
+<link rel="canonical" href="http://github.com/feelinggeeky/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">
+
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.css">
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":false};
+</script>
+
+    <title>JS垃圾回收机制 - Thomas's blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/feelinggeeky.github.io/">
+        <li class="mobile-menu-item">Home
+          </li>
+      </a><a href="/feelinggeeky.github.io/archives/">
+        <li class="mobile-menu-item">Archives
+          </li>
+      </a><a href="/feelinggeeky.github.io/tags/">
+        <li class="mobile-menu-item">Tags
+          </li>
+      </a><a href="/feelinggeeky.github.io/categories/">
+        <li class="mobile-menu-item">Categories
+          </li>
+      </a><a href="/feelinggeeky.github.io/about/">
+        <li class="mobile-menu-item">About
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/">
+            Home
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/archives/">
+            Archives
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/tags/">
+            Tags
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/categories/">
+            Categories
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/about/">
+            About
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">JS垃圾回收机制
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-14
+        </span><span class="post-category">
+            <a href="/feelinggeeky.github.io/categories/Javascript/">Javascript</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要垃圾回收（Why）？"><span class="toc-text">为什么要垃圾回收（Why）？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript垃圾回收机制原理（What-？"><span class="toc-text">JavaScript垃圾回收机制原理（What)？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS中垃圾回收方式-两种"><span class="toc-text">JS中垃圾回收方式(两种)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标记清除"><span class="toc-text">标记清除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用计数-方式"><span class="toc-text">引用计数 方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么情况会引起内存泄漏？"><span class="toc-text">什么情况会引起内存泄漏？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#意外的全局变量引起的内存泄漏。"><span class="toc-text">意外的全局变量引起的内存泄漏。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#闭包引起的内存泄漏"><span class="toc-text">闭包引起的内存泄漏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#没有清理的DOM元素引用"><span class="toc-text">没有清理的DOM元素引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#被遗忘的定时器或者回调"><span class="toc-text">被遗忘的定时器或者回调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#子元素存在引用引起的内存泄漏"><span class="toc-text">子元素存在引用引起的内存泄漏</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾回收的使用场景优化"><span class="toc-text">垃圾回收的使用场景优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#什么放在内存中？什么不放在内存中？"><span class="toc-text">什么放在内存中？什么不放在内存中？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#栈和堆的区别"><span class="toc-text">栈和堆的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、堆栈空间分配区别："><span class="toc-text">一、堆栈空间分配区别：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、堆栈缓存方式区别："><span class="toc-text">二、堆栈缓存方式区别：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、堆栈数据结构区别："><span class="toc-text">三、堆栈数据结构区别：</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h2 id="为什么要垃圾回收（Why）？"><a href="#为什么要垃圾回收（Why）？" class="headerlink" title="为什么要垃圾回收（Why）？"></a>为什么要垃圾回收（Why）？</h2><blockquote>
 <p>  由于字符串、对象和数组没有固定大小，所有当他们的大小已知时，才能对他们进行动态的存储分配。JavaScript程序每次创建字符串、数组或对象时，解释器都必须分配内存来存储那个实体。只要像这样动态地分配了内存，最终都要释放这些内存以便他们能够被再用，否则，JavaScript的解释器将会消耗完系统中所有可用的内存，造成系统崩溃。</p>
 </blockquote>
 <h2 id="JavaScript垃圾回收机制原理（What-？"><a href="#JavaScript垃圾回收机制原理（What-？" class="headerlink" title="JavaScript垃圾回收机制原理（What)？"></a>JavaScript垃圾回收机制原理（What)？</h2><p>JavaScript垃圾回收的机制很简单：</p>
@@ -86,6 +211,11 @@
 <blockquote>
 <p><strong>解决：手动删除清空。</strong></p>
 </blockquote>
+<h2 id="垃圾回收的使用场景优化"><a href="#垃圾回收的使用场景优化" class="headerlink" title="垃圾回收的使用场景优化"></a>垃圾回收的使用场景优化</h2><p>1.数组array优化</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="built_in">console</span>.log(arr);</span><br><span class="line"><span class="comment">// 可以直接让数字清空，而且数组类型不变。</span></span><br><span class="line">arr.length = <span class="number">0</span>  </span><br><span class="line"><span class="comment">// arr = []; 虽然让a变量成一个空数组,但是在堆上重新申请了一个空数组对象。</span></span><br></pre></td></tr></table></figure>
+
+<p>将[]赋值给一个数组对象，是清空数组的捷径(例如： arr = [];),但是需要注意的是，这种方式又创建了一个新的空对象，并且将原来的数组对象变成了一小片内存垃圾！实际上，将数组长度赋值为0（arr.length = 0）也能达到清空数组的目的，并且同时能实现数组重用，减少内存垃圾的产生。</p>
+<p>2.对象尽量复用</p>
 <h2 id="什么放在内存中？什么不放在内存中？"><a href="#什么放在内存中？什么不放在内存中？" class="headerlink" title="什么放在内存中？什么不放在内存中？"></a>什么放在内存中？什么不放在内存中？</h2><p>基本类型是：Undefined/Null/Boolean/Number/String</p>
 <p>基本类型的值存在内存中，被保存在栈内存中。从一个变量向另一个变量复制基本类型的值，会创建这个值的一个副本。</p>
 <p>引用类型：object</p>
@@ -95,7 +225,59 @@
 <h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><h3 id="一、堆栈空间分配区别："><a href="#一、堆栈空间分配区别：" class="headerlink" title="一、堆栈空间分配区别："></a>一、堆栈空间分配区别：</h3><p>1、栈（操作系统）：由操作系统自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈；<br>2、堆（操作系统）： 一般由程序员分配释放，若程序员不释放，程序结束时可能由OS回收，分配方式倒是类似于链表。</p>
 <h3 id="二、堆栈缓存方式区别："><a href="#二、堆栈缓存方式区别：" class="headerlink" title="二、堆栈缓存方式区别："></a>二、堆栈缓存方式区别：</h3><p>1、栈使用的是一级缓存， 他们通常都是被调用时处于存储空间中，调用完毕立即释放；<br>2、堆是存放在二级缓存中，生命周期由虚拟机的垃圾回收算法来决定（并不是一旦成为孤儿对象就能被回收）。所以调用这些对象的速度要相对来得低一些。</p>
 <h3 id="三、堆栈数据结构区别："><a href="#三、堆栈数据结构区别：" class="headerlink" title="三、堆栈数据结构区别："></a>三、堆栈数据结构区别：</h3><p>堆（数据结构）：堆可以被看成是一棵树，如：堆排序；<br>栈（数据结构）：一种先进后出的数据结构。</p>
-</div><div class="tags"></div><div class="post-nav"><a class="next" href="/feelinggeeky.github.io/2019/10/13/Charles01/">Charles实现本地数据mock，404</a></div></div></div></div><div class="pure-u-1 pure-u-md-1-4"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://github.com/feelinggeeky/feelinggeeky.github.io"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/CSS/">CSS</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Charles/">Charles</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Hexo/">Hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Javascript/">Javascript</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/SSM/">SSM</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/feelinggeeky.github.io/categories/Windows/">Windows</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/feelinggeeky.github.io/tags/Exceptions/" style="font-size: 15px;">Exceptions</a> <a href="/feelinggeeky.github.io/tags/CSS预处理器/" style="font-size: 15px;">CSS预处理器</a> <a href="/feelinggeeky.github.io/tags/flex/" style="font-size: 15px;">flex</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">JS垃圾回收机制</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/10/13/Charles01/">Charles实现本地数据mock，404</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2019/09/30/面试/">面试</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/23/04.fs/">Node.js_04</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/22/03.buffer/">Node.js_03</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/21/02.npm/">Node.js_02</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/">CSS预处理器-Less</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/18/01.CommonJS/">Node.js_01</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/07/06/flex/">flex</a></li><li class="post-list-item"><a class="post-list-link" href="/feelinggeeky.github.io/2018/06/20/essay4/">CMS遇见java.lang.NullPointerException</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://www.fzq1997.top" title="Franklin" target="_blank">Franklin</a><ul></ul><a href="https://blog.xyx98.top" title="奚宇星" target="_blank">奚宇星</a><ul></ul><a href="https://www.delaunay.cn/" title="张欢" target="_blank">张欢</a><ul></ul><a href="https://ouyuo.github.io" title="孙卓" target="_blank">孙卓</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/feelinggeeky.github.io/." rel="nofollow">Thomas's blog.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/feelinggeeky.github.io/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/feelinggeeky.github.io/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.2/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
-  });
-</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/feelinggeeky.github.io/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/feelinggeeky.github.io/js/smartresize.js?v=0.0.0"></script></div></body></html>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io">托马斯·黄独秀</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">http://github.com/feelinggeeky/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/feelinggeeky.github.io/2019/10/13/Charles01/">
+        <span class="next-text nav-default">Charles实现本地数据mock，404</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:your@email.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/ahonn" class="iconfont icon-github" title="github"></a>
+        <a href="/feelinggeeky.github.io/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2018 - 2019<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">托马斯·黄独秀</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/feelinggeeky.github.io/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
