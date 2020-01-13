@@ -134,16 +134,16 @@
     <div class="post-toc-content">
       <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CommonJS"><span class="toc-text">CommonJS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#引入模块"><span class="toc-text">引入模块</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模块化"><span class="toc-text">模块化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#全局对象global"><span class="toc-text">全局对象global</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#exports和module-exports"><span class="toc-text">exports和module.exports</span></a></li></ol>
     </div>
-  </div><div class="post-content"><h1 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h1><ul>
-<li>模块引用<br>  require</li>
-<li>模块定义<br>  一个js文件就是一个模块，定义模块就是创建一个js文件</li>
+  </div><div class="post-content"><h1 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h1><ol>
+<li>模块引用<br>require</li>
+<li>模块定义<br>一个js文件就是一个模块，定义模块就是创建一个js文件</li>
 <li>模块标识<ul>
 <li>模块的标识就是<strong>模块的名字或者路径</strong></li>
 <li>对于核心模块（npm下载的模块），直接使用<strong>模块的名字</strong>对其进行引入</li>
 <li>自定义，使用<strong>文件的路径</strong>来进行引入</li>
 </ul>
 </li>
-</ul>
+</ol>
 <h1 id="引入模块"><a href="#引入模块" class="headerlink" title="引入模块"></a>引入模块</h1><p>在node中，通过require()函数来引入外部的模块</p>
 <ul>
 <li><strong>require()</strong> 可以传递一个文件的路径作为参数，node将会自动根据该路径来引入外部模块</li>
@@ -152,9 +152,19 @@
 </ul>
 <p>在使用require()引入外部模块时，使用的就是模块标识，可通过模块标识来找到指定模块</p>
 <p><strong>模块分成两大类</strong></p>
+<ol>
+<li><strong>核心模块</strong></li>
+</ol>
 <ul>
-<li><strong>核心模块</strong><br>  -由node引擎提供的模块<br>  -核心模块的标识就是<strong>模块的名字</strong></li>
-<li><strong>文件模块</strong><br>  -由用户自己创建的模块<br>  -文件模块的标识就是 <strong>文件的路径（绝对、相对路径）</strong></li>
+<li>由node引擎提供的模块</li>
+<li>核心模块的标识就是<strong>模块的名字</strong></li>
+</ul>
+<ol start="2">
+<li><strong>文件模块</strong></li>
+</ol>
+<ul>
+<li>由用户自己创建的模块</li>
+<li>文件模块的标识就是 <strong>文件的路径（绝对、相对路径）</strong></li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var md = require(&quot;./moudle&quot;);</span><br><span class="line">    md就是引入的模块 返回值</span><br><span class="line">var math = require(&quot;./math&quot;);</span><br><span class="line">    路径就是</span><br><span class="line">console.log(md);</span><br></pre></td></tr></table></figure>
 
@@ -183,16 +193,11 @@
 <p>通过exports只能使用 .的方式来向外暴露内部变量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exports.xxx = xxx;</span><br></pre></td></tr></table></figure>
 
-
-</li>
-</ol>
 <ul>
-<li><p>而module.exports既可以通过.的形式，也可以直接赋值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">module.exports.xxx = xxx;</span><br><span class="line">module.exports = &#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>而module.exports既可以通过.的形式，也可以直接赋值</li>
 </ul>
-<ol start="4">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">module.exports.xxx = xxx;</span><br><span class="line">module.exports = &#123;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>__filename<br>当前模块的完整路径，如:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\NodeJS\01.md</span><br></pre></td></tr></table></figure>
 </li>
