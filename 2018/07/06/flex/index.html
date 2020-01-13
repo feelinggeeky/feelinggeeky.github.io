@@ -132,34 +132,37 @@
     <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#flex-frog练习"><span class="toc-text">flex frog练习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex基础点"><span class="toc-text">flex基础点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex注意点"><span class="toc-text">flex注意点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#老版本"><span class="toc-text">老版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新版本"><span class="toc-text">新版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新版本新增"><span class="toc-text">新版本新增</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#伸缩规则"><span class="toc-text">伸缩规则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#侧轴富裕空间的管理"><span class="toc-text">侧轴富裕空间的管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex的简写属性"><span class="toc-text">flex的简写属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#响应式布局核心CSS3媒体查询选择器"><span class="toc-text">响应式布局核心CSS3媒体查询选择器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#多列布局"><span class="toc-text">多列布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#规范"><span class="toc-text">规范</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#预处理器（less）"><span class="toc-text">预处理器（less）</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#flex-frog练习"><span class="toc-text">flex frog练习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex基础"><span class="toc-text">flex基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex注意点"><span class="toc-text">flex注意点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#老版本"><span class="toc-text">老版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新版本"><span class="toc-text">新版本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#新版本新增"><span class="toc-text">新版本新增</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#伸缩规则"><span class="toc-text">伸缩规则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#侧轴富裕空间的管理"><span class="toc-text">侧轴富裕空间的管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flex的简写属性"><span class="toc-text">flex的简写属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#响应式布局核心CSS3媒体查询选择器"><span class="toc-text">响应式布局核心CSS3媒体查询选择器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#多列布局"><span class="toc-text">多列布局</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#规范"><span class="toc-text">规范</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#预处理器（less）"><span class="toc-text">预处理器（less）</span></a></li></ol>
     </div>
   </div><div class="post-content"><h1 id="flex-frog练习"><a href="#flex-frog练习" class="headerlink" title="flex frog练习"></a>flex frog练习</h1><p><a href="http://flexboxfroggy.com/" target="_blank" rel="noopener">http://flexboxfroggy.com/</a></p>
-<h1 id="flex基础点"><a href="#flex基础点" class="headerlink" title="flex基础点"></a>flex基础点</h1><ul>
+<h1 id="flex基础"><a href="#flex基础" class="headerlink" title="flex基础"></a>flex基础</h1><ul>
 <li><p>什么是容器，什么是项目，什么是主轴，什么是侧轴</p>
 </li>
 <li><p>项目永远排列在主轴的正方向上</p>
 </li>
 <li><p>flex分新旧两个版本</p>
-<ul>
-<li>webkit-box</li>
-<li>webkit-flex / flex</li>
-</ul>
+</li>
+<li><p>webkit-box</p>
+</li>
+<li><p>webkit-flex / flex</p>
 </li>
 </ul>
 <h1 id="flex注意点"><a href="#flex注意点" class="headerlink" title="flex注意点"></a>flex注意点</h1><ul>
 <li><p>新版本的flex比老版本的flex强大很多</p>
-<ul>
+</li>
 <li><p>移动端开发者必须需要关注老版本的flex </p>
+</li>
+</ul>
 <ul>
+<li><ul>
 <li>因为很多移动端设备内核低  只用老版本的flex</li>
 </ul>
 </li>
+</ul>
+<ul>
 <li><p>老版本的box通过两个属性四个属性值控制了主轴的位置和方向</p>
 </li>
 <li><p>新版本的flex通过一个属性四个属性值控制了主轴的位置和方向</p>
-</li>
-</ul>
 </li>
 </ul>
 <h1 id="老版本"><a href="#老版本" class="headerlink" title="老版本"></a>老版本</h1><ul>
@@ -167,28 +170,36 @@
 <ul>
 <li><p>容器的布局方向</p>
 <ul>
-<li>-webkit-box-orient:horizontal/vertical</li>
-<li>控制主轴是哪一根<ul>
-<li>horizontal: x轴</li>
-<li>vertical: y轴</li>
-</ul>
+<li><p>-webkit-box-orient:horizontal/vertical</p>
+</li>
+<li><p>控制主轴是哪一根</p>
+</li>
+<li><p>horizontal: x轴</p>
+</li>
+<li><p>vertical: y轴</p>
 </li>
 </ul>
 </li>
 <li><p>容器的排列方向</p>
 <ul>
 <li>-webkit-box-direction:normal/reverse</li>
-<li>控制主轴方向<ul>
-<li>normal：从左往右（正方向）</li>
-<li>reverse：从右往左（反方向）</li>
+</ul>
+<ul>
+<li><p>控制主轴方向</p>
+<ul>
+<li><p>normal：从左往右（正方向）</p>
+</li>
+<li><p>reverse：从右往左（反方向）</p>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p>富裕控件的管理</p>
 <ul>
-<li><p>只决定富裕控件的位置，不会给项目区分配空间</p>
-</li>
+<li>只决定富裕控件的位置，不会给项目区分配空间</li>
+</ul>
+<ul>
 <li><p>主轴</p>
 <ul>
 <li>-webkit-box-pack</li>
