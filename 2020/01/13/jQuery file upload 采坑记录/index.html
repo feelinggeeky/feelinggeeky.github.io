@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="不得不说jQuery file upload插件文档有点杂乱，API是挺全的，但是也没有明确哪些API兼不兼容IE，再加上还不熟悉之前flash写的业务代码，头疼。"><link rel="alternate" href="/feelinggeeky.github.io/atom.xml" title="Thomas's blog"><link rel="shortcut icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico?v=2.11.0">
+<link rel="canonical" href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/">
+
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.css"><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>jQuery file upload踩坑记录 - Thomas's blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/feelinggeeky.github.io/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/feelinggeeky.github.io/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/feelinggeeky.github.io/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/feelinggeeky.github.io/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/feelinggeeky.github.io/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/feelinggeeky.github.io/links/">
+        <li class="mobile-menu-item">友情链接
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/links/">
+            友情链接
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">jQuery file upload踩坑记录
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-13
+        </span><span class="post-category">
+            <a href="/feelinggeeky.github.io/categories/jQuery/">jQuery</a>
+            <a href="/feelinggeeky.github.io/categories/jQuery/Seajs/">Seajs</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#采坑记录"><span class="toc-text">采坑记录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-jQuery-File-Upload的使用"><span class="toc-text">1.jQuery File Upload的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引入："><span class="toc-text">引入：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码："><span class="toc-text">代码：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Seajs改造"><span class="toc-text">2.Seajs改造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-jQuery-File-Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传"><span class="toc-text">3.jQuery File Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-验证文件类型、大小失败"><span class="toc-text">4. 验证文件类型、大小失败</span></a></li></ol></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>不得不说jQuery file upload插件文档有点杂乱，API是挺全的，但是也没有明确哪些API兼不兼容IE，再加上还不熟悉之前flash写的业务代码，头疼。</p>
+<p>作为一个未毕业、0基础刚入门的前端切图仔，采坑是不可避免的，从小老师教导：‘’好记性不及烂笔头记‘’，那么记之以砥砺前行。</p>
+</blockquote>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="采坑记录"><a href="#采坑记录" class="headerlink" title="采坑记录"></a>采坑记录</h2><h2 id="1-jQuery-File-Upload的使用"><a href="#1-jQuery-File-Upload的使用" class="headerlink" title="1.jQuery File Upload的使用"></a>1.jQuery File Upload的使用</h2><blockquote>
+<p>Github地址：<a href="https://github.com/blueimp/jQuery-File-Upload">https://github.com/blueimp/jQuery-File-Upload</a></p>
+</blockquote>
+<h3 id="引入："><a href="#引入：" class="headerlink" title="引入："></a>引入：</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"../js/lib/jquery/1.9.1/jquery.min.js"</span>&gt;&lt;/script&gt;<span class="comment">//最好1.8版本向上</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/vendor/jquery.ui.widget.js"</span>&gt;&lt;/script&gt;<span class="comment">//必须</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/jquery.iframe-transport.js"</span>&gt;&lt;/script&gt;<span class="comment">//兼容IE必须</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/jquery.fileupload.js"</span>&gt;&lt;/script&gt;<span class="comment">//必须</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/cors/jquery.xdr-transport.js"</span>&gt;&lt;/script&gt;<span class="comment">//跨域 非必须</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/jquery.fileupload-process.js"</span>&gt;&lt;/script&gt;<span class="comment">//进度 非必须</span></span><br><span class="line"> &lt;script src=<span class="string">"../js/jquery.fileupload-validate.js"</span>&gt;&lt;/script&gt;<span class="comment">//验证 非必须</span></span><br></pre></td></tr></table></figure>
+
+<p>上传的主要文件是前四个，如果需要验证和进度条功能则需要引入最后两个文件。</p>
+<blockquote>
+<p>Ps：顺序最好不要乱，有依赖关系！</p>
+</blockquote>
+<h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#fileupload'</span>).fileupload(&#123;</span><br><span class="line">    dataType: <span class="string">'json'</span>,<span class="comment">//上传返回结果</span></span><br><span class="line"></span><br><span class="line">    url:<span class="string">''</span>,<span class="comment">//上传目标路径</span></span><br><span class="line">    fileInput: $(<span class="string">'input:file'</span>),<span class="comment">//指定上传的对象，值必须是jquery对象</span></span><br><span class="line">    singleFileUpload:<span class="literal">true</span>,<span class="comment">//是否单文件上传</span></span><br><span class="line"></span><br><span class="line">    multiple:<span class="literal">true</span>,<span class="comment">//是否多文件上传</span></span><br><span class="line">    autoUpload:<span class="literal">false</span>,<span class="comment">//是否自动上传</span></span><br><span class="line">    forceIframeTransport:<span class="literal">true</span>,<span class="comment">//强制使用iframe传输，IE必须</span></span><br><span class="line">    acceptFileTypes: <span class="regexp">/(\.|\/)(gif|jpe?g|png)$/i</span>,<span class="comment">//文件类型</span></span><br><span class="line">    maxFileSize: <span class="number">10000000</span>, <span class="comment">// 10 MB（有坑）</span></span><br><span class="line">    minFileSize: <span class="literal">undefined</span>, <span class="comment">// No minimal file size</span></span><br><span class="line">    maxNumberOfFiles: <span class="number">10</span>,<span class="comment">//最大上传文件数</span></span><br><span class="line">    add : <span class="function"><span class="keyword">function</span>(<span class="params">e, data</span>) </span>&#123;</span><br><span class="line">        data.files[<span class="number">0</span>]<span class="comment">//文件对象</span></span><br><span class="line">        data.files[<span class="number">0</span>].name<span class="comment">//文件名</span></span><br><span class="line">    &#125;,<span class="comment">//添加文件的回调,data不是文件本身，是一个包含文件的对象</span></span><br><span class="line">    send : <span class="function"><span class="keyword">function</span>(<span class="params">e,data</span>) </span>&#123;&#125;,<span class="comment">//开始发送的回调</span></span><br><span class="line">    done : <span class="function"><span class="keyword">function</span>(<span class="params">e, data</span>) </span>&#123;&#125;,<span class="comment">//文件上传完成的回调，data是返回的对象</span></span><br><span class="line">    fail : <span class="function"><span class="keyword">function</span>(<span class="params">e,data</span>) </span>&#123;&#125;.<span class="comment">//上传失败的回调</span></span><br><span class="line">    always : <span class="function"><span class="keyword">function</span>(<span class="params">e,data</span>) </span>&#123;&#125;,<span class="comment">//不管文件上传成功不成功，还是停止了，过程结束的回调。</span></span><br><span class="line">    progress: <span class="function"><span class="keyword">function</span> (<span class="params">e, data</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> progress = <span class="built_in">parseInt</span>(data.loaded / data.total * <span class="number">100</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        $(<span class="string">'#upload-progress'</span>).css(<span class="string">'width'</span>,progress + <span class="string">'%'</span>);</span><br><span class="line"></span><br><span class="line">    &#125;,<span class="comment">//上传进度的回调</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>具体API 查看Github：<a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Options">https://github.com/blueimp/jQuery-File-Upload/wiki/Options</a></p>
+</blockquote>
+<h2 id="2-Seajs改造"><a href="#2-Seajs改造" class="headerlink" title="2.Seajs改造"></a>2.Seajs改造</h2><p>原：</p>
+<p><img src="./2020011301.png" alt></p>
+<p>由于代码中只支持AMD规范，而Seajs是CMD规范，故将其改造。</p>
+<p><img src="./2020011302.png" alt></p>
+<p>将上图中的代码删除，并添加</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">define（<span class="string">" "</span>，<span class="function"><span class="keyword">function</span>(<span class="params">require,exports</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;）</span><br></pre></td></tr></table></figure>
+
+<p><img src="./2020011303.png" alt></p>
+<p><img src="./2020011304.png" alt></p>
+<h2 id="3-jQuery-File-Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传"><a href="#3-jQuery-File-Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传" class="headerlink" title="3.jQuery File Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传"></a>3.jQuery File Upload上传插件在第一次选择文件后进行取消操作，第二次选择文件后进行上传操作，会将第一次选择的图片也上传</h2><p>大致原因是click事件的绑定，每次触发add回调时，click事件handler都会进行绑定。</p>
+<p>因此，在第一次add时，handler被绑定到input:file上。</p>
+<p>第二次add，再次绑定handler，这次针对的是第二个文件。</p>
+<p>所以，这两个文件都被绑定在了input:file上，并在第二次点击上传按钮时进行提交。所以在绑定click事件处理程序之前，向按钮添加unbind解决这个问题。</p>
+<blockquote>
+<p>参考：（解决来源）问题大同小异：<a href="https://stackoverflow.com/questions/53812048/jquery-file-upload-plugin-uploads-the-first-image-again-on-uploading-the-second" target="_blank" rel="noopener">(https://stackoverflow.com/questions/53812048/jquery-file-upload-plugin-uploads-the-first-image-again-on-uploading-the-second)</a></p>
+</blockquote>
+<h2 id="4-验证文件类型、大小失败"><a href="#4-验证文件类型、大小失败" class="headerlink" title="4. 验证文件类型、大小失败"></a>4. 验证文件类型、大小失败</h2><p>具体原因未知，但是有一种麻烦的解决办法，就是手写验证，emmm…，那 jquery-fileupload-validate 要你何用？</p>
+<blockquote>
+<p>参考：（解决来源） <a href="https://stackoverflow.com/questions/15549094/jquery-file-upload-plugin-how-to-validate-files-on-add" target="_blank" rel="noopener"><a href="https://stackoverflow.com/questions/15549094/jquery-file-upload-plugin-how-to-validate-files-on-add" target="_blank" rel="noopener">https://stackoverflow.com/questions/15549094/jquery-file-upload-plugin-how-to-validate-files-on-add</a></a></p>
+<p>还有个激烈讨论的帖子<a href="https://stackoverflow.com/questions/17451629/maxfilesize-and-acceptfiletypes-in-blueimp-file-upload-plugin-do-not-work-why#" target="_blank" rel="noopener">https://stackoverflow.com/questions/17451629/maxfilesize-and-acceptfiletypes-in-blueimp-file-upload-plugin-do-not-work-why#</a></p>
+</blockquote>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io">托马斯·黄独秀</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/">http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">
+        <span class="next-text nav-default">JS垃圾回收机制</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:thomas.huang98@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/feelinggeeky" class="iconfont icon-github" title="github"></a>
+        </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2018 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">托马斯·黄独秀</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/feelinggeeky.github.io/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
