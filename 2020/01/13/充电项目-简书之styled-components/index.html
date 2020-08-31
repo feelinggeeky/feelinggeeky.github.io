@@ -130,10 +130,13 @@
         </div>
     </header>
 
-    <div class="post-content"><p>#前言</p>
-<p>充电计划之一：慕课简书项目</p>
-<p>#正文</p>
-<p>在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因。</p>
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正文"><span class="toc-text">正文</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>充电计划之一：慕课简书项目</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因。</p>
 <blockquote>
 <p>The injectGlobal API was removed and replaced by createGlobalStyle in styled-components v4.</p>
 </blockquote>
