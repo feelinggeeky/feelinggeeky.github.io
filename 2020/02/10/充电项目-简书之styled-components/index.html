@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 <link rel="alternate" href="/feelinggeeky.github.io/atom.xml" title="Thomas's blog"><link rel="shortcut icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico?v=2.11.0">
-<link rel="canonical" href="http://github.com/feelinggeeky/feelinggeeky.github.io/">
+<link rel="canonical" href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/02/10/充电项目-简书之styled-components/">
 
 <link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.css"><script type="text/x-mathjax-config">
     MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
@@ -40,7 +40,7 @@
   window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
 </script>
 
-    <title>Thomas's blog</title>
+    <title> - Thomas's blog</title>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -115,9 +115,9 @@
 
       <main id="main" class="main">
         <div class="content-wrapper">
-          <div id="content" class="content"><section id="posts" class="posts"><article class="post">
+          <div id="content" class="content"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2020/02/10/充电项目-简书之styled-components/"></a>
+      <h1 class="post-title">
         </h1>
 
       <div class="post-meta">
@@ -151,184 +151,29 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrowserRouter, Route &#125; <span class="keyword">from</span> <span class="string">'react-router-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> Header <span class="keyword">from</span> <span class="string">'./common/header'</span>;</span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'./pages/home'</span>;</span><br><span class="line"><span class="keyword">import</span> Detail <span class="keyword">from</span> <span class="string">'./pages/detail/loadable'</span>;</span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">'./pages/login'</span>;</span><br><span class="line"><span class="keyword">import</span> Write <span class="keyword">from</span> <span class="string">'./pages/write'</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalStyle &#125; <span class="keyword">from</span> <span class="string">'./style'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalIconFontStyle &#125; <span class="keyword">from</span> <span class="string">'./statics/iconfont/iconfont'</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">        &lt;GlobalStyle /&gt;</span><br><span class="line">        &lt;GlobalIconFontStyle /&gt;</span><br><span class="line">        &lt;BrowserRouter&gt;</span><br><span class="line">          &lt;div&gt;</span><br><span class="line">            &lt;Header&gt;&lt;/Header&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/'</span> exact component=&#123;Home&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/login'</span> exact component=&#123;Login&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/write'</span> exact component=&#123;Write&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/detail/:id'</span> exact component=&#123;Detail&#125;&gt;&lt;/Route&gt;</span><br><span class="line">          &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>BrowserRouter&gt;</span><br><span class="line">      &lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App;</span></span><br></pre></td></tr></table></figure>
 
 
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/">jQuery file upload踩坑记录</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2020-01-13
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/jQuery/">jQuery</a>
-            <a href="/feelinggeeky.github.io/categories/jQuery/Seajs/">Seajs</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>不得不说jQuery file upload插件文档有点杂乱，API是挺全的，但是也没有明确哪些API兼不兼容IE，再加上还不熟悉之前flash写的业务代码，头疼。</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/">JS垃圾回收机制</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-10-14
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/Javascript/">Javascript</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>Javascript具有自动垃圾回收机制(GC:Garbage Collecation)，也就是说，执行环境会负责管理代码执行过程中使用的内存。</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2019/10/14/js垃圾回收机制/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2019/10/13/Charles01/">Charles实现本地数据mock，404</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-10-13
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/Charles/">Charles</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>新版本charles配置Maplocal出现404问题，可能是由于charles升级引起。</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2019/10/13/Charles01/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2019/09/30/两列布局及三列布局/">两列布局的具体实现及其效果</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2019-09-30
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/CSS/">CSS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>面试经常会问的问题，如何实现两个盒子，左侧固定宽度，右侧自适应。</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2019/09/30/两列布局及三列布局/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2018/07/23/04.fs/">Node.js_04</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-07-23
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>文件系统(File System)</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2018/07/23/04.fs/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2018/07/22/03.buffer/">Node.js_03</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-07-22
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>Buffer</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2018/07/22/03.buffer/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2018/07/21/02.npm/">Node.js_02</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-07-21
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>npm</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2018/07/21/02.npm/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/">CSS预处理器-Less</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-07-20
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/CSS/">CSS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>初探less</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2018/07/20/CSS预处理器-Less/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <article class="post">
-    <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2018/07/18/01.CommonJS/">Node.js_01</a>
-        </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-07-18
-        </span><span class="post-category">
-            <a href="/feelinggeeky.github.io/categories/NodeJS/">NodeJS</a>
-            </span>
-        </div>
-    </header>
-
-    <div class="post-content"><p>初探nodejs</p>
-          <div class="read-more">
-            <a href="/feelinggeeky.github.io/2018/07/18/01.CommonJS/" class="read-more-link">阅读更多</a>
-          </div>
-        </div></article>
-      <nav class="pagination"><a class="next" href="/feelinggeeky.github.io/page/2/">
-        <span class="next-text">下一页</span>
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io">托马斯·黄独秀</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/02/10/充电项目-简书之styled-components/">http://github.com/feelinggeeky/feelinggeeky.github.io/2020/02/10/充电项目-简书之styled-components/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/">
+        <span class="next-text nav-default">jQuery file upload踩坑记录</span>
+        <span class="prev-text nav-mobile">下一篇</span>
         <i class="iconfont icon-right"></i>
       </a>
-    </nav></section></div></div>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
       </main>
 
       <footer id="footer" class="footer"><div class="social-links"><a href="mailto:thomas.huang98@foxmail.com" class="iconfont icon-email" title="email"></a>
