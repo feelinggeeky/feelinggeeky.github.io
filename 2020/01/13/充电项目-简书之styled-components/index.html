@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+<meta name="theme-color" content="#f8f5ec">
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因API被移除了"><link rel="alternate" href="/feelinggeeky.github.io/atom.xml" title="Thomas's blog"><link rel="shortcut icon" type="image/x-icon" href="/feelinggeeky.github.io/favicon.ico?v=2.11.0">
+<link rel="canonical" href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/充电项目-简书之styled-components/">
+
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.css"><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/feelinggeeky.github.io/css/style.css?v=2.11.0">
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>充电计划之一：慕课简书项目styled-components - Thomas's blog</title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/feelinggeeky.github.io/">
+        <li class="mobile-menu-item">首页
+          </li>
+      </a><a href="/feelinggeeky.github.io/archives/">
+        <li class="mobile-menu-item">归档
+          </li>
+      </a><a href="/feelinggeeky.github.io/tags/">
+        <li class="mobile-menu-item">标签
+          </li>
+      </a><a href="/feelinggeeky.github.io/categories/">
+        <li class="mobile-menu-item">分类
+          </li>
+      </a><a href="/feelinggeeky.github.io/about/">
+        <li class="mobile-menu-item">关于
+          </li>
+      </a><a href="/feelinggeeky.github.io/links/">
+        <li class="mobile-menu-item">友情链接
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/feelinggeeky.github.io/." class="logo">Thomas's blog</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/">
+            首页
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/archives/">
+            归档
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/tags/">
+            标签
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/categories/">
+            分类
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/about/">
+            关于
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/feelinggeeky.github.io/links/">
+            友情链接
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">充电计划之一：慕课简书项目styled-components
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-13
+        </span><span class="post-category">
+            <a href="/feelinggeeky.github.io/categories/React/">React</a>
+            <a href="/feelinggeeky.github.io/categories/React/充电/">充电</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-content"><p>#前言</p>
+<p>充电计划之一：慕课简书项目</p>
+<p>#正文</p>
+<p>在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因。</p>
+<blockquote>
+<p>The injectGlobal API was removed and replaced by createGlobalStyle in styled-components v4.</p>
+</blockquote>
+<p>这个API 被官方废除了，换成 createGlobalStyle 新的API ，作为一个样式组件出现，按照样式组件思想，以一个标签形式被引入。</p>
+<p>例如：</p>
+<ol>
+<li>用createGlobalStyle定义全局样式</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createGlobalStyle &#125; <span class="keyword">from</span> <span class="string">'styled-components'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Globalstyle = createGlobalStyle<span class="string">`　</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">body&#123;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　　margin: 0;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　　padding: 0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　&#125;`</span></span><br></pre></td></tr></table></figure>
+
+<p>然后按照样式组件引入即可</p>
+<ol start="2">
+<li>在项目主文件导入样式</li>
+</ol>
+<p>import { Globalstyle } from ‘./style’</p>
+<ol start="3">
+<li>在App.js里面引入，然后在最外层封装一下就行了。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrowserRouter, Route &#125; <span class="keyword">from</span> <span class="string">'react-router-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> Header <span class="keyword">from</span> <span class="string">'./common/header'</span>;</span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'./pages/home'</span>;</span><br><span class="line"><span class="keyword">import</span> Detail <span class="keyword">from</span> <span class="string">'./pages/detail/loadable'</span>;</span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">'./pages/login'</span>;</span><br><span class="line"><span class="keyword">import</span> Write <span class="keyword">from</span> <span class="string">'./pages/write'</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalStyle &#125; <span class="keyword">from</span> <span class="string">'./style'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalIconFontStyle &#125; <span class="keyword">from</span> <span class="string">'./statics/iconfont/iconfont'</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">        &lt;GlobalStyle /&gt;</span><br><span class="line">        &lt;GlobalIconFontStyle /&gt;</span><br><span class="line">        &lt;BrowserRouter&gt;</span><br><span class="line">          &lt;div&gt;</span><br><span class="line">            &lt;Header&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Header</span>&gt;</span></span></span><br><span class="line">            &lt;Route path=<span class="string">'/'</span> exact component=&#123;Home&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></span></span><br><span class="line">            &lt;Route path=<span class="string">'/login'</span> exact component=&#123;Login&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></span></span><br><span class="line">            &lt;Route path=<span class="string">'/write'</span> exact component=&#123;Write&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></span></span><br><span class="line">            &lt;Route path=<span class="string">'/detail/:id'</span> exact component=&#123;Detail&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">Route</span>&gt;</span></span></span><br><span class="line">          &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>BrowserRouter&gt;</span><br><span class="line">      &lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App;</span></span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>原文作者: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io">托马斯·黄独秀</a>
+    </p>
+    <p class="copyright-item">
+      <span>原文链接: </span>
+      <a href="http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/充电项目-简书之styled-components/">http://github.com/feelinggeeky/feelinggeeky.github.io/2020/01/13/充电项目-简书之styled-components/</a>
+    </p>
+    <p class="copyright-item">
+      <span>许可协议: </span>
+    </p>
+  </div>
+      <footer class="post-footer">
+        
+        <nav class="post-nav"><a class="next" href="/feelinggeeky.github.io/2020/01/13/jQuery file upload 采坑记录/">
+        <span class="next-text nav-default">jQuery file upload踩坑记录</span>
+        <span class="prev-text nav-mobile">下一篇</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div></div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:thomas.huang98@foxmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/feelinggeeky" class="iconfont icon-github" title="github"></a>
+        </div><div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://hexo.io/">Hexo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2018 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">托马斯·黄独秀</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/feelinggeeky.github.io/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/feelinggeeky.github.io/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>

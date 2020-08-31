@@ -117,40 +117,23 @@
         <div class="content-wrapper">
           <div id="content" class="content"><section id="posts" class="posts"><article class="post">
     <header class="post-header">
-      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2020/02/10/充电项目-简书之styled-components/"></a>
+      <h1 class="post-title"><a class="post-link" href="/feelinggeeky.github.io/2020/01/13/充电项目-简书之styled-components/">充电计划之一：慕课简书项目styled-components</a>
         </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2020-02-10
-        </span></div>
+          2020-01-13
+        </span><span class="post-category">
+            <a href="/feelinggeeky.github.io/categories/React/">React</a>
+            <a href="/feelinggeeky.github.io/categories/React/充电/">充电</a>
+            </span>
+        </div>
     </header>
 
-    <div class="post-content"><p>#前言</p>
-<p>充电计划之一：慕课简书项目</p>
-<p>#正文</p>
-<p>在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因。</p>
-<blockquote>
-<p>The injectGlobal API was removed and replaced by createGlobalStyle in styled-components v4.</p>
-</blockquote>
-<p>这个API 被官方废除了，换成 createGlobalStyle 新的API ，作为一个样式组件出现，按照样式组件思想，以一个标签形式被引入。</p>
-<p>例如：</p>
-<ol>
-<li>用createGlobalStyle定义全局样式</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createGlobalStyle &#125; <span class="keyword">from</span> <span class="string">'styled-components'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> Globalstyle = createGlobalStyle<span class="string">`　</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">body&#123;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　　margin: 0;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　　padding: 0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">　&#125;`</span></span><br></pre></td></tr></table></figure>
-
-<p>然后按照样式组件引入即可</p>
-<ol start="2">
-<li>在项目主文件导入样式</li>
-</ol>
-<p>import { Globalstyle } from ‘./style’</p>
-<ol start="3">
-<li>在App.js里面引入，然后在最外层封装一下就行了。</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrowserRouter, Route &#125; <span class="keyword">from</span> <span class="string">'react-router-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> Header <span class="keyword">from</span> <span class="string">'./common/header'</span>;</span><br><span class="line"><span class="keyword">import</span> Home <span class="keyword">from</span> <span class="string">'./pages/home'</span>;</span><br><span class="line"><span class="keyword">import</span> Detail <span class="keyword">from</span> <span class="string">'./pages/detail/loadable'</span>;</span><br><span class="line"><span class="keyword">import</span> Login <span class="keyword">from</span> <span class="string">'./pages/login'</span>;</span><br><span class="line"><span class="keyword">import</span> Write <span class="keyword">from</span> <span class="string">'./pages/write'</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalStyle &#125; <span class="keyword">from</span> <span class="string">'./style'</span></span><br><span class="line"><span class="keyword">import</span> &#123; GlobalIconFontStyle &#125; <span class="keyword">from</span> <span class="string">'./statics/iconfont/iconfont'</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">        &lt;GlobalStyle /&gt;</span><br><span class="line">        &lt;GlobalIconFontStyle /&gt;</span><br><span class="line">        &lt;BrowserRouter&gt;</span><br><span class="line">          &lt;div&gt;</span><br><span class="line">            &lt;Header&gt;&lt;/Header&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/'</span> exact component=&#123;Home&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/login'</span> exact component=&#123;Login&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/write'</span> exact component=&#123;Write&#125;&gt;&lt;/Route&gt;</span><br><span class="line">            &lt;Route path=<span class="string">'/detail/:id'</span> exact component=&#123;Detail&#125;&gt;&lt;/Route&gt;</span><br><span class="line">          &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>BrowserRouter&gt;</span><br><span class="line">      &lt;<span class="regexp">/Provider&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default App;</span></span><br></pre></td></tr></table></figure>
-
-
+    <div class="post-content"><p>在以前的styled-components中设置全局样式只需要 引入injectGlobal 即可，然而今天我用injectGlobal 的时候，总是提示不存在，找了半天找到原因API被移除了</p>
+          <div class="read-more">
+            <a href="/feelinggeeky.github.io/2020/01/13/充电项目-简书之styled-components/" class="read-more-link">阅读更多</a>
+          </div>
         </div></article>
       <article class="post">
     <header class="post-header">
